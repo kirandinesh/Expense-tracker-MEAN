@@ -1,0 +1,26 @@
+::ng-deep .apexcharts-tooltip-title,
+::ng-deep .apexcharts-tooltip,
+::ng-deep .apexcharts-menu {
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--color-shadow-soft);
+  backdrop-filter: blur(6px);
+}
+
+::ng-deep .apexcharts-menu-item {
+  color: var(--color-text-primary) !important;
+}
+
+::ng-deep .apexcharts-menu-item:hover {
+  background-color: rgba(29, 233, 182, 0.1) !important;
+  color: var(--color-text-price) !important;
+}
+table {
+  width: 100%;
+}
+
+.table-container {
+  max-height: calc(100vh - 155px);
+  height: calc(100vh - 155px);
+}

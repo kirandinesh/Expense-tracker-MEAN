@@ -1,0 +1,260 @@
+<div
+  class="w-full flex relative flex-col gap-8 md:gap-10 2md:gap-10 lg:gap-10 2xl:gap-20 xl:gap-16 2lg:gap-10 bg-bg-color 5xs:gap-10 4xs:gap-10 3xs:gap-10 sm:gap-10 text-text-primary p-4"
+>
+  <div
+    class="w-12 h-12 fixed cursor-pointer bottom-10 right-8 z-50 rounded-full flex justify-center items-center bg-btn-primary-bg shadow-lg"
+    (click)="handleAddExpense()"
+  >
+    <mat-icon>add</mat-icon>
+  </div>
+  <div
+    class="grid grid-cols-1 5xs:gap-10 4xs:gap-10 3xs:gap-10 sm:gap-10 md:gap-10 2lg:gap-5 2md:gap-10 lg:gap-8 sm:grid-cols-2 sm:grid-rows-1 lg:grid-cols-4 2xl:gap-16 xl:gap-8 gap-8"
+  >
+    <div
+      class="bg-card-bg overflow-hidden relative shadow-(--color-shadow-soft) hover:scale-[1.01] transition-transform duration-300 ease-in-out rounded-2xl gap-5"
+    >
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 h-10 2xl:w-36 2xl:h-24 2xl:-top-9 2xl:-left-5 top-0 -left-14 sm:w-32 sm:h-14 sm:-top-5 sm:-left-8 md:w-36 md:h-16 md:-top-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-top-11 5xs:-left-5 -rotate-45 2xs:-left-10 2xs:-top-2 4xs:-top-6 4xs:-left-5 absolute lg:w-20 lg:h-20 lg:-top-10 lg:-left-6 xl:w-32 xl:h-16 xl:-top-3 xl:-left-8"
+      ></div>
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 2xl:w-36 2xl:h-24 2xl:-bottom-9 2xl:-left-5 xl:w-32 xl:h-16 xl:-bottom-3 xl:-left-8 sm:w-32 sm:h-14 sm:-bottom-5 sm:-left-8 lg:w-20 lg:h-20 lg:-bottom-10 lg:-left-6 md:w-36 md:h-16 md:-bottom-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-bottom-11 5xs:-left-5 rotate-45 h-10 bottom-0 -left-14 2xs:-left-10 2xs:-bottom-2 4xs:-bottom-6 4xs:-left-5 absolute"
+      ></div>
+      <div
+        class="w-16 ml-3 h-16 2xl:w-[105px] 2xl:h-[105px] 2xs:w-[80px] 2xs:h-[80px] 4xs:w-[90px] 4xs:h-[90px] 5xs:w-[105px] 5xs:h-[105px] sm:w-20 sm:h-20 md:w-20 md:h-20 lg:w-[70px] lg:h-[70px] xl:w-[80px] xl:h-[80px] absolute rounded-full overflow-hidden bg-input-bg top-1/2 -translate-y-1/2 -left-4 2xs:ml-5 2xs:-left-6"
+      >
+        <div class="w-full h-full">
+          <app-animated-icon [path]="dateIconPath"> </app-animated-icon>
+        </div>
+      </div>
+      <div
+        class="w-full flex items-start flex-col ml-16 sm:ml-20 md:ml-24 2md:ml-28 py-5 2xs:py-6 4xs:py-7 justify-center 2xs:ml-24 4xs:ml-36 5xs:ml-40 xl:ml-24 4xs:space-y-1 sm:space-y-0 h-full lg:ml-16 2xl:py-10 2xl:ml-28"
+      >
+        <span
+          class="text-[0.9rem] sm:text-[1.1rem] 2xl:text-[1.3rem] md:text-[1.35rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.6rem] 2xs:tracking-wider xl:text-[1.1rem] lg:text-[0.95rem] 2lg:text-[1.15rem] font-bold text-text-primary tracking-wide"
+        >
+          First Expense Date
+        </span>
+        <span
+          *ngIf="firstExpenseDate; else noFirstDate"
+          class="text-md 2lg:text-[1.2rem] xl:text-[1.3rem] 2xl:text-[1.5rem] lg:text-[1.2rem] sm:text-[1.2rem] md:text-[1.3rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.5rem] text-text-secondary font-semibold"
+          >{{ firstExpenseDate | date : "dd - MM - yyyy" }}</span
+        >
+        <ng-template #noFirstDate
+          ><span
+            class="relative inline-block text-gray-500 italic text-sm sm:text-base md:text-lg lg:text-xl"
+          >
+            <span
+              class="text-gray-500 italic text-sm sm:text-base md:text-lg lg:text-xl"
+            >
+              <span class="mr-2 inline-block">📅</span> Not recorded
+            </span>
+          </span>
+        </ng-template>
+      </div>
+    </div>
+
+    <div
+      class="bg-card-bg overflow-hidden hover:scale-[1.01] transition-transform duration-300 ease-in-out relative shadow-(--color-shadow-soft) rounded-2xl gap-5"
+    >
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 h-10 2xl:w-36 2xl:h-24 2xl:-top-9 2xl:-left-5 top-0 -left-14 sm:w-32 sm:h-14 sm:-top-5 sm:-left-8 md:w-36 md:h-16 md:-top-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-top-11 5xs:-left-5 -rotate-45 2xs:-left-10 2xs:-top-2 4xs:-top-6 4xs:-left-5 absolute lg:w-20 lg:h-20 lg:-top-10 lg:-left-6 xl:w-32 xl:h-16 xl:-top-3 xl:-left-8"
+      ></div>
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 2xl:w-36 2xl:h-24 2xl:-bottom-9 2xl:-left-5 xl:w-32 xl:h-16 xl:-bottom-3 xl:-left-8 sm:w-32 sm:h-14 sm:-bottom-5 sm:-left-8 lg:w-20 lg:h-20 lg:-bottom-10 lg:-left-6 md:w-36 md:h-16 md:-bottom-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-bottom-11 5xs:-left-5 rotate-45 h-10 bottom-0 -left-14 2xs:-left-10 2xs:-bottom-2 4xs:-bottom-6 4xs:-left-5 absolute"
+      ></div>
+      <div
+        class="w-16 ml-3 h-16 2xl:w-[105px] 2xl:h-[105px] 2xs:w-[80px] 2xs:h-[80px] 4xs:w-[90px] 4xs:h-[90px] 5xs:w-[105px] 5xs:h-[105px] sm:w-20 sm:h-20 md:w-20 md:h-20 lg:w-[70px] lg:h-[70px] xl:w-[80px] xl:h-[80px] absolute rounded-full overflow-hidden bg-input-bg top-1/2 -translate-y-1/2 -left-4 2xs:ml-5 2xs:-left-6"
+      >
+        <div class="w-full h-full">
+          <app-animated-icon [path]="dateIconPath"> </app-animated-icon>
+        </div>
+      </div>
+      <div
+        class="w-full flex items-start flex-col ml-16 sm:ml-20 md:ml-24 2md:ml-28 py-5 2xs:py-6 4xs:py-7 justify-center 2xs:ml-24 4xs:ml-36 5xs:ml-40 xl:ml-24 4xs:space-y-1 sm:space-y-0 h-full lg:ml-16 2xl:py-10 2xl:ml-28"
+      >
+        <span
+          class="text-[0.9rem] sm:text-[1.1rem] 2xl:text-[1.3rem] md:text-[1.35rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.6rem] 2xs:tracking-wider xl:text-[1.1rem] lg:text-[0.95rem] 2lg:text-[1.15rem] font-bold text-text-primary tracking-wide"
+        >
+          Last Expense Date
+        </span>
+        <span
+          *ngIf="lastExpenseDate; else noLastDate"
+          class="text-md 2lg:text-[1.2rem] xl:text-[1.3rem] 2xl:text-[1.5rem] lg:text-[1.2rem] sm:text-[1.2rem] md:text-[1.3rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.5rem] text-text-secondary font-semibold"
+          >{{ lastExpenseDate | date : "dd - MM - yyyy" }}</span
+        ><ng-template #noLastDate
+          ><span
+            class="relative inline-block text-gray-500 italic text-sm sm:text-base md:text-lg lg:text-xl"
+          >
+            <span
+              class="text-gray-500 italic text-sm sm:text-base md:text-lg lg:text-xl"
+            >
+              <span class="mr-2 inline-block">📅</span> Not recorded
+            </span>
+          </span>
+        </ng-template>
+      </div>
+    </div>
+
+    <div
+      class="bg-card-bg overflow-hidden hover:scale-[1.01] transition-transform duration-300 ease-in-out relative shadow-(--color-shadow-soft) rounded-2xl gap-5"
+    >
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 h-10 2xl:w-36 2xl:h-24 2xl:-top-9 2xl:-left-5 top-0 -left-14 sm:w-32 sm:h-14 sm:-top-5 sm:-left-8 md:w-36 md:h-16 md:-top-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-top-11 5xs:-left-5 -rotate-45 2xs:-left-10 2xs:-top-2 4xs:-top-6 4xs:-left-5 absolute lg:w-20 lg:h-20 lg:-top-10 lg:-left-6 xl:w-32 xl:h-16 xl:-top-3 xl:-left-8"
+      ></div>
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 2xl:w-36 2xl:h-24 2xl:-bottom-9 2xl:-left-5 xl:w-32 xl:h-16 xl:-bottom-3 xl:-left-8 sm:w-32 sm:h-14 sm:-bottom-5 sm:-left-8 lg:w-20 lg:h-20 lg:-bottom-10 lg:-left-6 md:w-36 md:h-16 md:-bottom-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-bottom-11 5xs:-left-5 rotate-45 h-10 bottom-0 -left-14 2xs:-left-10 2xs:-bottom-2 4xs:-bottom-6 4xs:-left-5 absolute"
+      ></div>
+      <div
+        class="w-16 ml-3 h-16 2xl:w-[105px] 2xl:h-[105px] 2xs:w-[80px] 2xs:h-[80px] 4xs:w-[90px] 4xs:h-[90px] 5xs:w-[105px] 5xs:h-[105px] sm:w-20 sm:h-20 md:w-20 md:h-20 lg:w-[70px] lg:h-[70px] xl:w-[80px] xl:h-[80px] absolute rounded-full overflow-hidden bg-input-bg top-1/2 -translate-y-1/2 -left-4 2xs:ml-5 2xs:-left-6"
+      >
+        <div class="w-full h-full">
+          <app-animated-icon [path]="nonOfExpenseIconPath"> </app-animated-icon>
+        </div>
+      </div>
+      <div
+        class="w-full flex items-start flex-col ml-16 sm:ml-20 md:ml-24 2md:ml-28 py-5 2xs:py-6 4xs:py-7 justify-center 2xs:ml-24 4xs:ml-36 5xs:ml-40 xl:ml-24 4xs:space-y-1 sm:space-y-0 h-full lg:ml-16 2xl:py-10 2xl:ml-28"
+      >
+        <span
+          class="text-[0.9rem] sm:text-[1.1rem] 2xl:text-[1.3rem] md:text-[1.35rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.6rem] 2xs:tracking-wider xl:text-[1.1rem] lg:text-[0.95rem] 2lg:text-[1.15rem] font-bold text-text-primary tracking-wide"
+        >
+          No of Expense
+        </span>
+        <span
+          class="text-md 2lg:text-[1.2rem] xl:text-[1.3rem] 2xl:text-[1.5rem] lg:text-[1.2rem] sm:text-[1.2rem] md:text-[1.3rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.5rem] text-text-secondary font-semibold"
+          >{{ totalExpenseAdded }}</span
+        >
+      </div>
+    </div>
+
+    <div
+      class="bg-card-bg overflow-hidden hover:scale-[1.01] transition-transform duration-300 ease-in-out relative shadow-(--color-shadow-soft) rounded-2xl gap-5"
+    >
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 h-10 2xl:w-36 2xl:h-24 2xl:-top-9 2xl:-left-5 top-0 -left-14 sm:w-32 sm:h-14 sm:-top-5 sm:-left-8 md:w-36 md:h-16 md:-top-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-top-11 5xs:-left-5 -rotate-45 2xs:-left-10 2xs:-top-2 4xs:-top-6 4xs:-left-5 absolute lg:w-20 lg:h-20 lg:-top-10 lg:-left-6 xl:w-32 xl:h-16 xl:-top-3 xl:-left-8"
+      ></div>
+      <div
+        class="bg-primary-color shadow-(--color-shadow-soft) w-32 2xl:w-36 2xl:h-24 2xl:-bottom-9 2xl:-left-5 xl:w-32 xl:h-16 xl:-bottom-3 xl:-left-8 sm:w-32 sm:h-14 sm:-bottom-5 sm:-left-8 lg:w-20 lg:h-20 lg:-bottom-10 lg:-left-6 md:w-36 md:h-16 md:-bottom-6 md:-left-7 4xs:h-20 5xs:h-24 5xs:w-36 5xs:-bottom-11 5xs:-left-5 rotate-45 h-10 bottom-0 -left-14 2xs:-left-10 2xs:-bottom-2 4xs:-bottom-6 4xs:-left-5 absolute"
+      ></div>
+      <div
+        class="w-16 ml-3 h-16 2xl:w-[105px] 2xl:h-[105px] 2xs:w-[80px] 2xs:h-[80px] 4xs:w-[90px] 4xs:h-[90px] 5xs:w-[105px] 5xs:h-[105px] sm:w-20 sm:h-20 md:w-20 md:h-20 lg:w-[70px] lg:h-[70px] xl:w-[80px] xl:h-[80px] absolute rounded-full overflow-hidden bg-input-bg top-1/2 -translate-y-1/2 -left-4 2xs:ml-5 2xs:-left-6"
+      >
+        <div class="w-full h-full">
+          <app-animated-icon [path]="rupeeIconPath"> </app-animated-icon>
+        </div>
+      </div>
+      <div
+        class="w-full flex items-start flex-col ml-16 sm:ml-20 md:ml-24 2md:ml-28 py-5 2xs:py-6 4xs:py-7 justify-center 2xs:ml-24 4xs:ml-36 5xs:ml-40 xl:ml-24 4xs:space-y-1 sm:space-y-0 h-full lg:ml-16 2xl:py-10 2xl:ml-28"
+      >
+        <span
+          class="text-[0.9rem] sm:text-[1.1rem] 2xl:text-[1.3rem] md:text-[1.35rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.6rem] 2xs:tracking-wider xl:text-[1.1rem] lg:text-[0.95rem] 2lg:text-[1.15rem] font-bold text-text-primary tracking-wide"
+        >
+          Total Amount
+        </span>
+        <span
+          class="text-md 2lg:text-[1.2rem] xl:text-[1.3rem] 2xl:text-[1.5rem] lg:text-[1.2rem] sm:text-[1.2rem] md:text-[1.3rem] 2md:text-[1.4rem] xs:text-lg 2xs:text-xl 4xs:text-[1.5rem] text-text-secondary font-semibold"
+          >{{ totalExpenseAmount | currency : "INR" : "symbol" : "1.0-0" }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 sm:gap-10 3xs:gap-10 4xs:gap-10 5xs:gap-10 sm:grid-cols-2 md:gap-10 2md:gap-10 lg:gap-10 2lg:gap-10 2xl:gap-20 xl:gap-16 gap-8"
+  >
+    <div
+      class="bg-card-bg rounded-2xl shadow-[var(--color-shadow-soft)] p-5 flex flex-col gap-4 transition-transform hover:scale-[1.01] cursor-pointer"
+      (click)="openDialog()"
+    >
+      <div>
+        <span
+          class="text-text-muted text-[0.8rem] xs:text-[1rem] 2xs:text-[1.2rem] 3xs:text-[1.4rem] 4xs:text-[1.5rem] sm:text-[1.1rem] md:text-[1.4rem] font-semibold tracking-wide 2xl:text-2xl"
+        >
+          <div>Category Summary</div>
+          <span class="text-base pl-1 text-primary-color">click to view</span>
+        </span>
+      </div>
+      <div class="w-full flex justify-center items-center">
+        <div
+          class="w-[150px] h-[150px] 2xl:w-full 2xl:h-96 xs:w-[180px] xs:h-[180px] 2xs:w-[250px] 2xs:h-[220px] 3xs:w-[250px] 3xs:my-5 3xs:h-[230px] 4xs:w-[350px] 4xs:h-[300px] sm:w-[200px] sm:h-[200px] md:w-[280px] md:h-[280px]"
+        >
+          <app-animated-icon [path]="pieChartIconPath"></app-animated-icon>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-card-bg rounded-2xl shadow-[var(--color-shadow-soft)] p-5 flex flex-col gap-4 transition-transform hover:scale-[1.01] cursor-pointer"
+      (click)="openBarDialog()"
+    >
+      <div>
+        <span
+          class="text-text-muted text-[0.8rem] xs:text-[1rem] 2xs:text-[1.2rem] 3xs:text-[1.4rem] 4xs:text-[1.5rem] sm:text-[1.1rem] md:text-[1.4rem] font-semibold tracking-wide 2xl:text-2xl"
+        >
+          <div>Expense Monthly Summary</div>
+          <span class="text-base text-primary-color">click to view</span>
+        </span>
+      </div>
+      <div class="w-full flex justify-center items-center">
+        <div
+          class="w-[150px] h-[150px] 2xl:w-full 2xl:h-96 xs:w-[180px] xs:h-[180px] 2xs:w-[250px] 2xs:h-[220px] 3xs:w-[250px] 3xs:my-5 3xs:h-[230px] 4xs:w-[350px] 4xs:h-[300px] sm:w-[200px] sm:h-[200px] md:w-[280px] md:h-[280px]"
+        >
+          <app-animated-icon [path]="barChartIconPath"></app-animated-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-card-bg rounded-2xl shadow-[var(--color-shadow-soft)] p-5 flex flex-col gap-4 transition-transform hover:scale-[1.01] cursor-pointer"
+  >
+    <div class="py-5">
+      <span
+        class="text-2xl text-text-muted text-shadow-(--color-shadow-soft) font-black"
+        >Expense Summary</span
+      >
+    </div>
+    <div
+      *ngIf="!expenseList || expenseList.data.length === 0"
+      class="p-4 bg-[var(--color-card-bg)] rounded-lg shadow-md text-center"
+    >
+      <h2
+        class="text-xl md:text-2xl lg:text-3xl font-semibold text-[var(--color-text-primary)]"
+      >
+        Welcome to Your Expense Tracker
+      </h2>
+      <p
+        class="text-sm sm:text-base md:text-lg lg:text-xl text-[var(--color-text-muted)] mt-2"
+      >
+        It looks like you haven’t added any expenses yet. Start by adding your
+        first one!
+      </p>
+
+      <div class="flex justify-center mt-6">
+        <button
+          (click)="handleAddExpense()"
+          class="text-sm sm:text-base md:text-xl bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-text)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--color-btn-primary-hover)] transition-all"
+        >
+          Add Your First Expense
+        </button>
+      </div>
+    </div>
+    <div
+      *ngIf="expenseList && expenseList.data.length > 0"
+      class="table-container shadow-[var(--color-shadow-soft)] z-10 overflow-auto"
+    >
+      <app-table
+        [isExpense]="true"
+        [expenseList]="expenseList"
+        [headers]="tableHeader"
+      ></app-table>
+    </div>
+
+    <mat-paginator
+      *ngIf="expenseList && expenseList.data.length > 0"
+      [length]="totalExpenseAdded"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 100]"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </div>
+</div>

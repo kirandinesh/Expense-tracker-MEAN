@@ -1,0 +1,49 @@
+<div
+  class="flex justify-between items-center fixed z-50 top-4 right-4 p-2 cursor-pointer"
+>
+  <div
+    class="flex flex-col items-center gap-3 bg-menu-bg rounded-4xl p-2 shadow-md shadow-[rgba(0,0,0,0.25)]"
+  >
+    <div class="flex items-center justify-center gap-2" (click)="onMenuClick()">
+      <div class="flex">
+        <mat-icon>expand_circle_down</mat-icon>
+      </div>
+      <div
+        class="w-10 h-10 rounded-full flex justify-center items-center bg-btn-primary-bg shadow-lg"
+      >
+        <app-animated-icon [path]="avatarIconPath"></app-animated-icon>
+      </div>
+    </div>
+
+    <div
+      [@openClose]="menuState"
+      class="w-36 flex flex-col gap-2 rounded-4xl transition-all duration-200 ease-in-out"
+    >
+      <button
+        class="flex items-center gap-2 bg-btn-primary-bg hover:bg-btn-primary-hover text-text-primary p-2 text-sm font-semibold rounded-full transition shadow-sm hover:shadow-lg"
+        (click)="openDialog()"
+      >
+        <div class="w-8 h-8 rounded-full shadow-md">
+          <app-animated-icon [path]="profileIconPath"></app-animated-icon>
+        </div>
+        <span class="text-btn-text"> Profile</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 bg-btn-primary-bg hover:bg-btn-hover-bg text-text-primary p-2 text-sm font-semibold rounded-full transition shadow-sm hover:shadow-lg"
+        (click)="handleAddExpense()"
+      >
+        <mat-icon class="text-accent-color text-base">add_circle</mat-icon>
+        <span class="text-btn-text">Add Expense</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 bg-warn-color hover:bg-btn-warn-hover text-white p-2 text-sm font-semibold rounded-full transition shadow-sm hover:shadow-lg"
+        (click)="hadleLogout()"
+      >
+        <mat-icon class="text-white text-base">logout</mat-icon>
+        <span class="text-btn-text">Logout</span>
+      </button>
+    </div>
+  </div>
+</div>

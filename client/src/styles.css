@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #0fae8b;
+  --accent-color: #2fffd0;
+  --warn-color: #ff6f61;
+
+  --bg-color: #101d1a;
+  --card-bg: #172b26;
+  --input-bg: #1c3330;
+
+  --text-primary: #e9fef8;
+  --text-secondary: #a8dacc;
+  --text-muted: rgba(168, 218, 204, 0.4);
+  --text-price: #2fffd0;
+
+  --btn-primary-bg: #1de9b6;
+  --btn-primary-hover: #26ffc4;
+  --btn-primary-text: #0e3e2d;
+
+  --btn-secondary-bg: transparent;
+  --btn-secondary-hover: rgba(29, 233, 182, 0.1);
+  --btn-secondary-text: #b0d4c2;
+
+  --btn-warn-bg: #ef5350;
+  --btn-warn-hover: #ff6f61;
+  --btn-warn-text: #ffffff;
+
+  --btn-primary-glow: 0 0 10px rgba(29, 233, 182, 0.4);
+  --btn-warn-glow: 0 0 10px rgba(239, 83, 80, 0.4);
+  --btn-secondary-glow: 0 0 6px rgba(176, 212, 194, 0.1);
+
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(47, 255, 208, 0.15);
+
+  --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 6px rgba(47, 255, 208, 0.05);
+  --glow-accent: 0 0 10px rgba(47, 255, 208, 0.25);
+  --glow-warn: 0 0 10px rgba(255, 111, 97, 0.3);
+  --card-shadow-3d: 0 10px 30px rgba(0, 0, 0, 0.4),
+    0 5px 15px rgba(47, 255, 208, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+  --logo-color: #2fffd0;
+  --logo-glow: 1px 1px 8px rgba(47, 255, 208, 0.2);
+
+  --transition-default: all 0.25s ease-in-out;
+
+  --table-bg: transparent;
+  --table-header-bg: #0fae8b;
+  --table-header-text: #ffffff;
+  --table-row-bg-odd: transparent;
+  --table-row-bg-even: rgba(255, 255, 255, 0.025);
+  --table-row-hover: rgba(47, 255, 208, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg-color);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+input {
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+.mat-mdc-paginator {
+  background-color: #172b26 !important;
+}
+.mat-mdc-select-panel {
+  background-color: #172b26 !important;
+}
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  background: transparent !important;
+}
+.mat-horizontal-content-container {
+  padding: 0 !important;
+}
+.mat-horizontal-stepper-header {
+  padding: 0 5px !important;
+}
+.mat-mdc-table {
+  background: var(--card-bg) !important;
+}
+.mat-mdc-header-row {
+  background-color: var(--table-header-bg) !important;
+}
+.mat-mdc-header-row:hover {
+  background-color: var(--table-header-bg) !important;
+}
+tr:hover {
+  background-color: var(--table-row-hover) !important;
+}
+.mat-mdc-row:nth-child(odd) {
+  background-color: var(--table-row-bg-odd) !important;
+}
+
+.mat-mdc-row:nth-child(even) {
+  background-color: var(--table-row-bg-even) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+.mdc-tab-indicator__content--underline {
+  border-color: var(--accent-color) !important;
+}
+.mdc-line-ripple::after {
+  border-color: var(--accent-color) !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary) !important;
+}
+.mat-mdc-unelevated-button:not(:disabled) {
+  color: var(--text-primary) !important;
+  background-color: var(--primary-color) !important;
+  border: 1px solid #1de9b6 !important;
+}
+.mat-mdc-outlined-button {
+  background-color: var(--warn-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-dialog-surface {
+  background-color: #1f3a34 !important;
+}
+button {
+  cursor: pointer;
+}
+
+@theme {
+  --breakpoint-5xs: 36rem;
+  --breakpoint-4xs: 32rem;
+  --breakpoint-3xs: 28rem;
+  --breakpoint-2xs: 24rem;
+  --breakpoint-xs: 20rem;
+  --breakpoint-2md: 56rem;
+  --breakpoint-2lg: 72rem;
+
+  --color-primary-color: #0fae8b;
+  --color-accent-color: #2fffd0;
+  --color-warn-color: #ff6f61;
+
+  --color-bg-color: #101d1a;
+  --color-card-bg: #172b26;
+  --color-input-bg: #1c3330;
+
+  --color-text-primary: #e9fef8;
+  --color-text-secondary: #a8dacc;
+  --color-text-muted: rgba(168, 218, 204, 0.4);
+  --color-text-price: #2fffd0;
+
+  --color-btn-primary-bg: #2fffd0;
+  --color-btn-primary-hover: #55ffe0;
+  --color-btn-text: #0c1a17;
+  --color-btn-warn-bg: #ff6f61;
+  --color-btn-warn-hover: #ff958b;
+
+  --color-btn-primary-bg: #1de9b6;
+  --color-btn-primary-hover: #26ffc4;
+  --color-btn-primary-text: #0e3e2d;
+
+  --color-btn-secondary-bg: transparent;
+  --color-btn-secondary-hover: rgba(29, 233, 182, 0.1);
+  --color-btn-secondary-text: #b0d4c2;
+
+  --color-btn-warn-bg: #ef5350;
+  --color-btn-warn-hover: #ff6f61;
+  --color-btn-warn-text: #ffffff;
+
+  --color-btn-primary-glow: 0 0 10px rgba(29, 233, 182, 0.4);
+  --color-btn-warn-glow: 0 0 10px rgba(239, 83, 80, 0.4);
+  --color-btn-secondary-glow: 0 0 6px rgba(176, 212, 194, 0.1);
+
+  --color-border-light: rgba(255, 255, 255, 0.08);
+  --color-border-accent: rgba(47, 255, 208, 0.15);
+
+  --color-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 6px rgba(47, 255, 208, 0.05);
+  --color-glow-accent: 0 0 10px rgba(47, 255, 208, 0.25);
+  --color-glow-warn: 0 0 10px rgba(255, 111, 97, 0.3);
+  --color-card-shadow-3d: 0 10px 30px rgba(0, 0, 0, 0.4),
+    0 5px 15px rgba(47, 255, 208, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+  --color-logo-color: #2fffd0;
+  --color-logo-glow: 1px 1px 8px rgba(47, 255, 208, 0.2);
+
+  --color-transition-default: all 0.25s ease-in-out;
+
+  --color-table-bg: transparent;
+  --color-table-header-bg: #0fae8b;
+  --color-table-header-text: #ffffff;
+  --color-table-row-bg-odd: transparent;
+  --color-table-row-bg-even: rgba(255, 255, 255, 0.025);
+  --color-table-row-hover: rgba(47, 255, 208, 0.08);
+}

@@ -1,0 +1,70 @@
+<div
+  [formGroup]="userRegistrationForm"
+  class="flex flex-col gap-4 text-white p-5"
+>
+  <mat-form-field>
+    <mat-label>Full Name</mat-label>
+    <input matInput type="text" formControlName="fullName" />
+    @if (userRegistrationForm.get('fullName')?.hasError('required')) {
+    <mat-error>Full name is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Username</mat-label>
+    <input matInput type="text" formControlName="userName" />
+    @if (userRegistrationForm.get('userName')?.hasError('required')) {
+    <mat-error>Username is required</mat-error>
+    } @if (userRegistrationForm.get('userName')?.hasError('pattern')) {
+    <mat-error
+      >Username must be 3–16 characters and only letters, numbers, or
+      underscores</mat-error
+    >
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" />
+    @if (userRegistrationForm.get('email')?.hasError('required')) {
+    <mat-error>Email is required</mat-error>
+    } @if (userRegistrationForm.get('email')?.hasError('email')) {
+    <mat-error>Enter a valid email address</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input
+      formControlName="password"
+      matInput
+      [type]="hide() ? 'password' : 'text'"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="clickEvent($event)"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide()"
+    >
+      <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    @if (userRegistrationForm.get('password')?.hasError('required')) {
+    <mat-error>Password is required</mat-error>
+    } @if (userRegistrationForm.get('password')?.hasError('pattern')) {
+    <mat-error
+      >Password must be at least 8 characters and include uppercase, lowercase,
+      number, and special character</mat-error
+    >
+    }
+  </mat-form-field>
+  <div class="flex justify-center items-center">
+    <button
+      class="px-10 rounded-2xl bg-primary-color text-xl font-semibold hover:bg-accent-color cursor-pointer text-text-primary tracking-wider border-accent-color border-1 py-2"
+      (click)="onSubmit()"
+      [disabled]="isSubmitting"
+    >
+      Sign Up
+    </button>
+  </div>
+</div>

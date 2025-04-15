@@ -1,0 +1,54 @@
+<div [formGroup]="userLoginForm" class="flex flex-col gap-4 text-white p-5">
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" />
+
+    @if (getControllName('email')?.hasError('required') &&
+    getControllName('email')?.touched) {
+    <mat-error>Email is <strong>required</strong></mat-error>
+    } @if (getControllName('email')?.hasError('email') &&
+    !getControllName('email')?.hasError('required') &&
+    getControllName('email')?.touched ) {
+    <mat-error>Please enter a valid email address</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input
+      formControlName="password"
+      matInput
+      [type]="hide() ? 'password' : 'text'"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="clickEvent($event)"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide()"
+    >
+      <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+
+    @if (getControllName('password')?.hasError('required') &&
+    getControllName('password')?.touched) {
+    <mat-error>Password is <strong>required</strong></mat-error>
+    }
+  </mat-form-field>
+  <div class="flex flex-col gap-2 justify-center items-center">
+    <button
+      class="px-10 rounded-2xl bg-primary-color text-xl font-semibold hover:bg-accent-color cursor-pointer text-text-primary tracking-wider border-accent-color border-1 py-2"
+      (click)="onSubmit()"
+      [disabled]="userLoginForm.invalid"
+    >
+      Login
+    </button>
+    <mat-hint>
+      <a
+        routerLink="/forget-password"
+        class="text-warn-color font-medium tracking-wide cursor-pointer"
+        >Forget Password ?</a
+      >
+    </mat-hint>
+  </div>
+</div>

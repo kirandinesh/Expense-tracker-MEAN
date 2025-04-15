@@ -1,0 +1,193 @@
+<ng-container *ngIf="!userDialogData.isHeader">
+  <h2 *ngIf="pieChartData.selectedChartType == 'pie'" mat-dialog-title>
+    {{ pieChartData.chartTitle.text }}
+  </h2>
+  <h2 *ngIf="barChartData.selectedChartType == 'bar'" mat-dialog-title>
+    {{ barChartData.barChartTitle.text }}
+  </h2>
+  <mat-dialog-content>
+    <div class="w-full h-full" *ngIf="pieChartData.selectedChartType == 'pie'">
+      <ng-container *ngIf="pieChartData.chartSeries?.length; else noPieData">
+        <apx-chart
+          [chart]="pieChartData.chartDetails"
+          [series]="pieChartData.chartSeries"
+          [labels]="pieChartData.chartLables"
+          [title]="pieChartData.chartTitle"
+          [legend]="pieChartData.chartLegent"
+          [dataLabels]="pieChartData.chartDataLabels"
+          [responsive]="pieChartData.chartResponsive"
+        ></apx-chart>
+      </ng-container>
+      <ng-template #noPieData>
+        <p class="text-center text-gray-400 text-sm">
+          No data available for pie chart.
+        </p>
+      </ng-template>
+    </div>
+
+    <div class="w-full h-full" *ngIf="barChartData.selectedChartType == 'bar'">
+      <ng-container
+        *ngIf="barChartData.chartXaxis?.categories?.length; else noBarData"
+      >
+        <apx-chart
+          [series]="barChartData.barChartSeries"
+          [legend]="barChartData.chartLegent"
+          [chart]="barChartData.chartDetailsBar"
+          [title]="barChartData.barChartTitle"
+          [xaxis]="barChartData.chartXaxis"
+          [responsive]="pieChartData.chartResponsive"
+        ></apx-chart> </ng-container
+      ><ng-template #noBarData>
+        <p class="text-center text-gray-400 text-sm">
+          No data available for pie chart.
+        </p>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions *ngIf="!deleteuserDialogData.isDelete">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-container>
+
+<div *ngIf="userDialogData.isHeader" class="relative">
+  <h2 mat-dialog-title>User Information</h2>
+  <mat-dialog-content>
+    <div
+      class="bg-[#1e3732] text-[#f1f5f9] w-full max-w-2xl rounded-2xl shadow-2xl mx-auto transition-all duration-300"
+    >
+      <div class="flex flex-col items-center gap-4 mb-8">
+        <div
+          class="w-16 h-16 bg-[#38b2ac] text-[#172b26] rounded-full flex items-center justify-center text-2xl font-bold shadow-md"
+        >
+          {{ userDialogData?.userData?.fullName?.charAt(0) }}
+        </div>
+        <div
+          *ngIf="isEdit"
+          [formGroup]="userUpdateData"
+          class="flex flex-col gap-4 text-white"
+        >
+          <mat-form-field>
+            <mat-label>Full Name</mat-label>
+            <input matInput type="text" formControlName="fullName" />
+            @if (userUpdateData.get('fullName')?.hasError('required')) {
+            <mat-error>Full name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="userName" />
+            @if (userUpdateData.get('userName')?.hasError('required')) {
+            <mat-error>Username is required</mat-error>
+            } @if (userUpdateData.get('userName')?.hasError('pattern')) {
+            <mat-error
+              >Username must be 3–16 characters and only letters, numbers, or
+              underscores</mat-error
+            >
+            }
+          </mat-form-field>
+
+          <button
+            [disabled]="isUpdating"
+            class="bg-primary-color mt-5 hover:bg-btn-primary-hover text-btn-primary-text p-2 rounded-2xl font-black tracking-wider text-base"
+            (click)="submitEdit()"
+          >
+            <ng-container *ngIf="isUpdating">
+              <div class="flex justify-center items-center gap-2">
+                <app-loader></app-loader>
+                <span>Submitting...</span>
+              </div>
+            </ng-container>
+            Sumbit
+          </button>
+        </div>
+        <div class="flex flex-col justify-center items-center" *ngIf="!isEdit">
+          <span class="text-2xl font-semibold tracking-wide">
+            {{ userDialogData?.userData?.fullName }}
+          </span>
+          <span class="text-sm text-[#a3b8b3] font-medium tracking-wide">
+            {{ userDialogData?.userData?.userName }}
+          </span>
+        </div>
+      </div>
+
+      <hr class="border-[#2d4c45] mb-6" />
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm sm:text-base">
+        <div class="bg-[#223e38] p-4 rounded-xl shadow-inner">
+          <div class="text-[#a3b8b3] mb-1 text-xs uppercase tracking-wider">
+            User Since
+          </div>
+          <div class="font-medium text-[#f1f5f9]">
+            {{ userDialogData?.userData?.userSince | date : "dd-MM-YYYY" }}
+          </div>
+        </div>
+
+        <div class="bg-[#223e38] p-4 rounded-xl shadow-inner">
+          <div class="text-[#a3b8b3] mb-1 text-xs uppercase tracking-wider">
+            Expenses Added
+          </div>
+          <div class="font-medium text-[#f1f5f9]">
+            {{ totalExpenseAdded }}
+          </div>
+        </div>
+
+        <div class="bg-[#223e38] p-4 rounded-xl shadow-inner">
+          <div class="text-[#a3b8b3] mb-1 text-xs uppercase tracking-wider">
+            Last Login
+          </div>
+          <div class="font-medium text-[#f1f5f9]">
+            {{ userDialogData?.userData?.lastLogin | date : "dd-MM-YYYY" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <div class="py-5 flex justify-between px-2">
+    <button
+      class="p-2 bg-btn-warn-bg font-semibold text-btn-warn-text rounded-2xl"
+      (click)="openDialog()"
+    >
+      Delete Account
+    </button>
+    <button
+      class="px-4 bg-btn-primary-bg rounded-xl text-btn-primary-text font-black"
+      (click)="toggleEdit()"
+    >
+      {{ isEdit ? "Cancel" : "Edit" }}
+    </button>
+  </div>
+
+  <div
+    class="absolute top-0 w-16 h-16 -right-5 flex justify-center items-center rounded-full bg-bg-color shadow-[--color-shadow-soft]"
+  >
+    <mat-dialog-actions>
+      <button
+        mat-button
+        mat-dialog-close
+        class="rounded-full hover:bg-btn-primary-hover"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>
+
+<div *ngIf="deleteuserDialogData.isDelete">
+  <h2 mat-dialog-title>Confirm Deletion</h2>
+  <mat-dialog-content>
+    <ng-container *ngIf="isDeleting">
+      <div>
+        <span>
+          Are you sure you want to delete your account? This action is
+          permanent.
+        </span>
+      </div>
+    </ng-container>
+    <app-animated-icon [path]="binIconPath"></app-animated-icon>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="deleteUser()">Yes, Delete</button>
+  </mat-dialog-actions>
+</div>

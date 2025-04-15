@@ -1,0 +1,360 @@
+<div class="min-h-screen px-2 py-0 md:px-6 lg:px-4">
+  <div>
+    <a routerLink="/home/dashboard">
+      <button class="bg-btn-secondary-bg p-2 rounded-2xl">
+        <div
+          class="flex items-center gap-2 text-btn-secondary-text bg-btn-secondary-bg"
+        >
+          <div>
+            <div
+              class="bg-btn-primary-bg px-1 py-1 rounded-xl flex items-center justify-center z-10 duration-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1024 1024"
+                height="25px"
+                width="25px"
+              >
+                <path
+                  d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
+                  fill="#000000"
+                ></path>
+                <path
+                  d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
+                  fill="#000000"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span class="font-semibold text-btn-secondary-text">Go Back</span>
+          </div>
+        </div>
+      </button>
+    </a>
+  </div>
+  <div
+    class="mt-4 flex flex-col bg-card-bg rounded-lg p-4 shadow-(--color-shadow-soft)"
+  >
+    <h2 class="text-text-primary font-bold text-lg">
+      {{ isExpenseEdit ? "Update Expense Category" : "Add Expense Category" }}
+    </h2>
+    <div class="mt-4">
+      <label class="text-text-secondary" for="category">{{
+        editMode ? "Remove Expense Category" : "Add Expense Category"
+      }}</label>
+
+      <mat-chip-set aria-label="category selection">
+        <mat-chip> Food </mat-chip>
+        <mat-chip> Travel </mat-chip>
+        <mat-chip> Entertainment </mat-chip>
+        <mat-chip> Groceries </mat-chip>
+        <mat-chip *ngFor="let cat of categoryArray; let i = index">
+          <span class="flex justify-center items-center">
+            <mat-icon (click)="deleteCategory(i)" *ngIf="editMode" class="me-1"
+              >cancel</mat-icon
+            >
+            {{ cat | titlecase }}
+          </span>
+        </mat-chip>
+      </mat-chip-set>
+
+      <form [formGroup]="addCategoryForm">
+        <textarea
+          id="category"
+          name="category"
+          formControlName="categoryText"
+          placeholder="Category names (comma separated)"
+          [ngClass]="{`cursor-not-allowed`:editMode}"
+          class="w-full bg-input-bg rounded-md border placeholder:text-text-muted border-border-accent text-text-primary px-2 py-1 mt-1"
+        ></textarea>
+      </form>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-2 justify-end">
+      <button
+        class="mr-3 rounded-md shadow-(--color-shadow-soft) bg-btn-secondary-bg hover:to-btn-secondary-hover p-2 flex justify-center items-center"
+        (click)="handleEditCategory()"
+      >
+        <mat-icon [ngStyle]="{ color: 'white' }">
+          {{ editMode ? "cancel" : "edit" }}
+        </mat-icon>
+      </button>
+      <button
+        type="button"
+        class="bg-btn-secondary-bg shadow-(--color-shadow-soft) hover:bg-btn-secondary-hover font-semibold tracking-wide text-btn-secondary-text rounded-md px-4 py-1 transition-all duration-200"
+        (click)="addCategoryForm.reset()"
+      >
+        Reset
+      </button>
+      <button
+        type="button"
+        [disabled]="editMode ? false : isCategoryEmpty"
+        class="bg-btn-primary-bg text-btn-primary-text rounded-md font-semibold tracking-wide px-4 py-1 hover:bg-btn-primary-hover transition-all duration-200"
+        (click)="editMode ? handleUpdateCategory() : handleAddCategory()"
+      >
+        <div *ngIf="isUpdating">
+          <app-loader />
+        </div>
+        <span *ngIf="!isUpdating">{{ editMode ? "Update" : "Submit" }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-wrap gap-2 mt-4 border-[3px] shadow-(--color-shadow-soft) border-border-light rounded-xl select-none p-2 bg-bg-color"
+  >
+    <label
+      class="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer"
+      (change)="changeMode('manual')"
+    >
+      <input
+        type="radio"
+        name="radio"
+        value="manual"
+        class="peer hidden"
+        [checked]="modeSelector === 'manual'"
+      />
+      <span
+        class="tracking-widest shadow-(--color-glow-accent) font-semibold text-lg peer-checked:bg-gradient-to-r peer-checked:from-[var(--accent-color)] peer-checked:to-[var(--btn-primary-hover)] peer-checked:text-[var(--color-btn-primary-text)] text-[var(--text-secondary)] p-2 rounded-lg transition duration-150 ease-in-out border border-[var(--border-light)]"
+      >
+        Manual
+      </span>
+    </label>
+
+    <label
+      class="radio flex flex-grow items-center justify-center rounded-lg p-1 cursor-pointer"
+      (change)="changeMode('csv')"
+    >
+      <input
+        type="radio"
+        name="radio"
+        value="csv"
+        class="peer hidden"
+        [checked]="modeSelector === 'csv'"
+      />
+      <span
+        class="tracking-widest shadow-(--color-glow-accent) font-semibold text-lg peer-checked:bg-gradient-to-r peer-checked:from-[var(--accent-color)] peer-checked:to-[var(--btn-primary-hover)] peer-checked:text-[var(--color-btn-primary-text)] text-[var(--text-secondary)] p-2 rounded-lg transition duration-150 ease-in-out border border-[var(--border-light)]"
+      >
+        CSV File
+      </span>
+    </label>
+  </div>
+
+  <div
+    *ngIf="modeSelector === 'manual'"
+    class="mt-4 flex flex-col bg-card-bg shadow-(--color-shadow-soft) rounded-lg p-4"
+  >
+    <form [formGroup]="addExpenseForm" (ngSubmit)="handleAddExpense()">
+      <h2 class="text-text-primary font-bold text-lg">
+        {{ isExpenseEdit ? "Update New Expense" : "Add New Expense" }}
+      </h2>
+      <p class="text-text-secondary mt-2">Enter all Required Fields</p>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-text-primary" for="expense-name"
+            >Expense Name*</label
+          >
+          <input
+            formControlName="name"
+            id="expense-name"
+            name="expense-name"
+            type="text"
+            placeholder="Enter Expense name"
+            class="w-full bg-input-bg rounded-md border placeholder:text-text-muted border-border-accent text-text-primary px-2 py-1 mt-1"
+          />
+        </div>
+
+        <div>
+          <label class="text-text-primary" for="expense-amount"
+            >Expense Amount*</label
+          >
+          <input
+            id="expense-amount"
+            formControlName="amount"
+            name="expense-amount"
+            type="number"
+            min="0"
+            placeholder="Amount (in rupees)"
+            class="w-full bg-input-bg rounded-md border placeholder:text-text-muted border-border-accent text-text-primary px-2 py-1 mt-1"
+          />
+        </div>
+
+        <div>
+          <mat-form-field class="w-full">
+            <mat-label>Choose a Expense date</mat-label>
+            <input
+              matInput
+              formControlName="expenseDate"
+              [matDatepicker]="picker"
+            />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Select Category</mat-label>
+            <mat-select
+              formControlName="category"
+              panelClass="custom-select-panel"
+              disableRipple
+            >
+              <mat-option value="food">Food</mat-option>
+              <mat-option value="travel">Travel</mat-option>
+              <mat-option value="entertainment">Entertainment</mat-option>
+              <mat-option value="groceries">Groceries</mat-option>
+              <mat-option *ngFor="let cat of categoryArray" [value]="cat">
+                {{ cat }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Select Payment Type</mat-label>
+            <mat-select
+              formControlName="paymentType"
+              panelClass="custom-select-panel"
+              disableRipple
+            >
+              <mat-option *ngFor="let pay of paymentModeArray" [value]="pay">
+                {{ pay }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <mat-label>Additional notes</mat-label>
+        <textarea
+          placeholder="Additional Notes"
+          formControlName="notes"
+          class="w-full bg-input-bg rounded-md border placeholder:text-text-muted border-border-accent text-text-primary px-2 py-1"
+        ></textarea>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2 justify-end">
+        <button
+          type="button"
+          class="text-btn-warn-text bg-btn-warn-bg rounded-md px-4 py-1 hover:bg-btn-warn-hover transition-all duration-200"
+          (click)="handleResetExpense()"
+        >
+          Reset
+        </button>
+        <button
+          type="submit"
+          [disabled]="!addExpenseForm.valid || isLoading"
+          class="bg-btn-primary-bg text-btn-primary-text rounded-md px-4 py-1 font-semibold tracking-wide hover:bg-btn-primary-hover transition-all duration-200"
+        >
+          <div class="mx-2" *ngIf="isLoading">
+            <app-loader />
+          </div>
+          {{ isLoading ? "" : "Submit" }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div
+    *ngIf="modeSelector === 'csv'"
+    class="mt-4 flex flex-col bg-card-bg shadow-(--color-shadow-soft) rounded-lg p-4"
+  >
+    <h2 class="text-text-primary font-bold text-lg">Import CSV Expense</h2>
+    <div class="text-text-secondary mt-1">
+      <mat-stepper [linear]="true" #stepper>
+        <mat-step>
+          <ng-template matStepLabel>Import</ng-template>
+          <div class="w-full overflow-x-auto">
+            <app-table
+              [isDemo]="true"
+              [dataSource]="dataSource"
+              [displayedColumns]="displayedColumns"
+            ></app-table>
+          </div>
+          <div>
+            <button mat-button matStepperNext hidden>Next</button>
+            <label (click)="fileUpload.click()" for="csv-file-upload">
+              <button mat-raised-button class="mt-2" color="primary">
+                Import CSV
+              </button>
+            </label>
+            <input
+              id="csv-file-upload"
+              name="csv-files"
+              type="file"
+              #fileUpload
+              style="display: none"
+              accept=".csv"
+              class="w-full bg-input-bg rounded-md border placeholder:text-text-muted border-border-accent text-text-primary px-2 py-1 mt-2"
+              (change)="onFileSelected($event)"
+            />
+          </div>
+        </mat-step>
+        <mat-step label="Review">
+          <div class="w-full h-fit max-h-[400px] overflow-auto">
+            <app-table
+              [isDemo]="false"
+              [dataList]="dataList"
+              [headers]="headers"
+            ></app-table>
+          </div>
+          <div class="flex mt-3 gap-2 justify-center">
+            <button
+              mat-raised-button
+              matStepperPrevious
+              (click)="stepper.reset()"
+            >
+              Back
+            </button>
+            <button mat-flat-button matStepperNext>Next</button>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Done</ng-template>
+          <div
+            class="w-full flex justify-center items-center"
+            *ngIf="isUploadingFileCompleted"
+          >
+            <div class="h-72">
+              <ng-lottie
+                [options]="options"
+                width="100%"
+                height="100%"
+                (animationCreated)="animationCreated($event)"
+              ></ng-lottie>
+            </div>
+          </div>
+          <div *ngIf="!isUploadingFileCompleted">
+            <div class="flex flex-col gap-2 justify-center items-center">
+              <div>
+                <p class="text-sm">Click on Submit to upload the file</p>
+              </div>
+              <button
+                [disabled]="isUploadingFile"
+                class="px-4 flex gap-2 items-center py-2 mb-5 bg-btn-primary-bg text-btn-primary-text rounded-2xl hover:bg-btn-primary-hover"
+                (click)="uploadCSVFile()"
+              >
+                <app-loader *ngIf="isUploadingFile" />
+                <span> Submit</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex flex-col justify-center items-center gap-3">
+            <div class="flex gap-2">
+              <button mat-flat-button matStepperPrevious>Back</button>
+              <button mat-stroked-button (click)="uploadReset()">Reset</button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </div>
+  </div>
+</div>
