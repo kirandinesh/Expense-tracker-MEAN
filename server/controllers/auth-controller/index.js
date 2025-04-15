@@ -1,4 +1,6 @@
 const User = require("../../models/user");
+const Expense = require("../../models/Expense");
+const Category = require("../../models/Categories");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userToken = require("../../models/userToken");
@@ -315,10 +317,12 @@ const deleteAccount = async (req, res) => {
       });
     }
     const deleteUser = await User.findOneAndDelete({ _id: userId });
-    if (!deleteUser) {
+    const deleteCategory = await User.findOneAndDelete({ userId: userId });
+    const deleteExpense = await User.findOneAndDelete({ userId: userId });
+    if (!deleteUser || !deleteCategory || !deleteExpense) {
       return res.status(500).json({
         success: false,
-        message: "Failed to delete user information",
+        message: "Failed to delete user",
       });
     }
 

@@ -1,7 +1,12 @@
 <div [formGroup]="userLoginForm" class="flex flex-col gap-4 text-white p-5">
   <mat-form-field>
     <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email" />
+    <input
+      matInput
+      type="email"
+      formControlName="email"
+      [value]="userLoginForm.get('email')?.value | lowercase"
+    />
 
     @if (getControllName('email')?.hasError('required') &&
     getControllName('email')?.touched) {

@@ -21,9 +21,7 @@ export class LoaderInterceptor implements HttpInterceptor {
     this.loaderService.show();
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-    
-
-        return throwError(() => new Error(error.message));
+        return throwError(() => error);
       }),
       finalize(() => this.loaderService.hide())
     );

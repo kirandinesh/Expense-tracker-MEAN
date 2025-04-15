@@ -7,7 +7,7 @@ const CategorySchema = new mongoose.Schema({
   },
   categoryText: {
     type: [String],
-    default: [],
+    default: ["food", "travel", "entertainment", "groceries"],
   },
 });
 

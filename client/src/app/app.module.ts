@@ -59,6 +59,7 @@ import {
 } from '@angular/material/dialog';
 import { DialogcontainerComponent } from './components/dialogcontainer/dialogcontainer.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,6 +102,12 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     MatDialogContent,
     MatDialogTitle,
     MatPaginatorModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 1000,
+      preventDuplicates: true,
+      closeButton: true,
+    }),
   ],
   providers: [
     provideLottieOptions({ player: () => player }),

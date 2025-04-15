@@ -73,7 +73,6 @@ export class HeaderComponent implements OnInit {
     this.authService.fetchUser().subscribe({
       next: (res) => {
         this.userData = res?.data;
-        console.log(this.userData, 'check user');
       },
       error: (err) => {
         console.log(err);

@@ -14,6 +14,7 @@ import { AnimationOptions } from 'ngx-lottie';
 import { AnimationItem } from 'lottie-web';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 type Mode = 'manual' | 'csv';
 @Component({
@@ -26,9 +27,7 @@ export class AddExpenseComponent implements OnInit {
   options: AnimationOptions = {
     path: '/assets/animations/upload_completed.json',
   };
-  animationCreated(animationItem: AnimationItem): void {
-    
-  }
+  animationCreated(animationItem: AnimationItem): void {}
   modeSelector: Mode = 'manual';
   editMode: boolean = false;
 
@@ -65,7 +64,8 @@ export class AddExpenseComponent implements OnInit {
     private dashboardService: DashbordService,
     private route: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private toasterService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -158,18 +158,18 @@ export class AddExpenseComponent implements OnInit {
     this.isUploadingFileCompleted = false;
 
     this.dashboardService.fileUploadService(formData).subscribe({
-      next: (response) => {
-        console.log(response, 'upload csv');
-
+      next: (response: any) => {
+        this.toasterService.success(response?.message);
         this.dataList = [];
         this.selectedFile = null;
         this.stepper.reset();
-
         this.stepper.selectedIndex = 0;
       },
       error: (error) => {
         console.error('Upload error:', error);
         this.isUploadingFile = false;
+        const errorMessage = error?.error?.message || 'Something went wrong';
+        this.toasterService.error(errorMessage);
       },
       complete: () => {
         this.isUploadingFile = false;
@@ -206,9 +206,9 @@ export class AddExpenseComponent implements OnInit {
         ? this.dashboardService
             .updateExpenseService(this.expenseId, expenseData)
             .subscribe({
-              next: (res) => {
+              next: (res: any) => {
                 console.log(res);
-
+                this.toasterService.success(res?.message);
                 this.isLoading = false;
                 this.addExpenseForm.reset();
                 this.addExpenseForm.markAsUntouched();
@@ -216,18 +216,23 @@ export class AddExpenseComponent implements OnInit {
                 this.router.navigate(['home/dashboard']);
               },
               error: (err) => {
-                console.log(err);
+                const errorMessage =
+                  err?.error?.message || 'Something went wrong';
+                this.toasterService.error(errorMessage);
               },
             })
         : this.dashboardService.addExpenseService(expenseData).subscribe({
-            next: (res) => {
+            next: (res: any) => {
               this.isLoading = false;
+              this.toasterService.success(res?.message);
               this.addExpenseForm.reset();
               this.addExpenseForm.markAsUntouched();
               this.addExpenseForm.markAsPristine();
             },
             error: (err) => {
-              console.log(err);
+              const errorMessage =
+                err?.error?.message || 'Something went wrong';
+              this.toasterService.error(errorMessage);
             },
           });
     }
@@ -245,7 +250,8 @@ export class AddExpenseComponent implements OnInit {
       );
 
       this.dashboardService.addCategoryService(filteredCategories).subscribe({
-        next: (res) => {
+        next: (res: any) => {
+          this.toasterService.success(res?.message);
           this.isUpdating = false;
 
           this.fetchCategory();
@@ -253,7 +259,8 @@ export class AddExpenseComponent implements OnInit {
           this.addCategoryForm.reset();
         },
         error: (err) => {
-          console.log(err);
+          const errorMessage = err?.error?.message || 'Something went wrong';
+          this.toasterService.error(errorMessage);
         },
       });
     }
@@ -277,13 +284,16 @@ export class AddExpenseComponent implements OnInit {
       this.dashboardService
         .updateCategoryService([...updatedCategoryArray])
         .subscribe({
-          next: (res) => {
+          next: (res: any) => {
+            this.toasterService.success(res?.message);
             this.isUpdating = false;
             this.editMode = false;
             this.addCategoryForm.get('categoryText')?.enable();
           },
           error: (err) => {
             console.log(err);
+            const errorMessage = err?.error?.message || 'Something went wrong';
+            this.toasterService.error(errorMessage);
           },
         });
     }
