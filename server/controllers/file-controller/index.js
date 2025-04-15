@@ -8,7 +8,10 @@ const importExpenseData = async (req, res) => {
   try {
     const file = req.file;
     console.log(file, "csv");
-
+    const uploadDir = path.join(__dirname, "..", "public", "uploads");
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
     const userId = req.user._id;
 
     if (!file) {
