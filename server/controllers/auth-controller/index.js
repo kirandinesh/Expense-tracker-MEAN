@@ -19,10 +19,18 @@ const registerUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { userName }] });
     if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User already Exists",
-      });
+      if (existingUser.userName === userName) {
+        return res.status(400).json({
+          success: false,
+          message: "Username is already taken",
+        });
+      }
+      if (existingUser.email === email) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is already registered",
+        });
+      }
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -232,11 +240,21 @@ const resetPassword = async (req, res) => {
 const updateUserInfo = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
+    console.log(userId, "update user");
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID not found in request" });
+    }
 
     const updatedData = req.body;
+    console.log(updatedData, "updatedData");
+    if (!updatedData || Object.keys(updatedData).length === 0) {
+      return res.status(400).json({ message: "No data provided for update" });
+    }
 
     const existingUser = await User.findOne({ _id: userId });
+    console.log(existingUser, "exist");
+
     if (!existingUser) {
       return res.status(404).json({
         success: false,
@@ -244,11 +262,12 @@ const updateUserInfo = async (req, res) => {
       });
     }
 
-    const updatedUser = await User.findOneAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       { _id: userId },
       updatedData,
       { new: true }
     );
+    console.log(updatedUser, "ipfff");
 
     if (!updatedUser) {
       return res.status(500).json({
@@ -263,6 +282,12 @@ const updateUserInfo = async (req, res) => {
       data: updatedUser,
     });
   } catch (err) {
+    if (err.code === 11000 && err.keyPattern?.userName) {
+      return res.status(400).json({
+        success: false,
+        message: "Username is already taken",
+      });
+    }
     return res.status(500).json({
       success: false,
       message: "Something went wrong on our end. Please try again later",
@@ -309,28 +334,31 @@ const deleteAccount = async (req, res) => {
     const userId = req.user._id;
     console.log(userId);
 
-    const existingUser = await User.findOne({ _id: userId });
+    const existingUser = await User.findById(userId);
     if (!existingUser) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    const deleteUser = await User.findOneAndDelete({ _id: userId });
-    const deleteCategory = await User.findOneAndDelete({ userId: userId });
-    const deleteExpense = await User.findOneAndDelete({ userId: userId });
-    if (!deleteUser || !deleteCategory || !deleteExpense) {
+
+    const deleteUser = await User.findByIdAndDelete(userId);
+    await Category.deleteMany({ userId: userId });
+    await Expense.deleteMany({ userId: userId });
+
+    if (!deleteUser) {
       return res.status(500).json({
         success: false,
         message: "Failed to delete user",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "user successfully deleted",
+      message: "User successfully deleted",
     });
   } catch (err) {
+    console.error("Error deleting user:", err);
     return res.status(500).json({
       success: false,
       message: "Something went wrong on our end. Please try again later",

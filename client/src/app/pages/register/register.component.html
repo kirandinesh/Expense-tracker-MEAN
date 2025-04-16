@@ -13,14 +13,21 @@
   <mat-form-field>
     <mat-label>Username</mat-label>
     <input matInput type="text" formControlName="userName" />
-    @if (userRegistrationForm.get('userName')?.hasError('required')) {
-    <mat-error>Username is required</mat-error>
-    } @if (userRegistrationForm.get('userName')?.hasError('pattern')) {
     <mat-error
-      >Username must be 3–16 characters and only letters, numbers, or
-      underscores</mat-error
+      *ngIf="userRegistrationForm.get('userName')?.hasError('required')"
     >
-    }
+      Username is required
+    </mat-error>
+    <mat-error
+      *ngIf="userRegistrationForm.get('userName')?.hasError('duplicate')"
+    >
+      Username is already taken
+    </mat-error>
+    <mat-error
+      *ngIf="userRegistrationForm.get('userName')?.hasError('pattern')"
+    >
+      Username must be 3–16 characters and only letters, numbers, or underscores
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
@@ -31,11 +38,15 @@
       formControlName="email"
       [value]="userRegistrationForm.get('email')?.value | lowercase"
     />
-    @if (userRegistrationForm.get('email')?.hasError('required')) {
-    <mat-error>Email is required</mat-error>
-    } @if (userRegistrationForm.get('email')?.hasError('email')) {
-    <mat-error>Enter a valid email address</mat-error>
-    }
+    <mat-error *ngIf="userRegistrationForm.get('email')?.hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error *ngIf="userRegistrationForm.get('email')?.hasError('email')">
+      Enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="userRegistrationForm.get('email')?.hasError('duplicate')">
+      Email is already registered
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>

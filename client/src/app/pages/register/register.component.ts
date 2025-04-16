@@ -66,6 +66,18 @@ export class RegisterComponent {
       error: (err) => {
         console.error('Register Error:', err);
         const errorMessage = err?.error?.message || 'Something went wrong';
+
+        if (errorMessage === 'Username is already taken') {
+          this.userRegistrationForm
+            .get('userName')
+            ?.setErrors({ duplicate: true });
+        }
+        if (errorMessage === 'Email is already registered') {
+          this.userRegistrationForm
+            .get('email')
+            ?.setErrors({ duplicate: true });
+        }
+
         this.toasterService.error(errorMessage);
         this.isSubmitting = false;
       },

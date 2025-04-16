@@ -7,6 +7,8 @@ import {
 } from '@angular/material/dialog';
 import { AuthService } from '../../services/authService/auth.service';
 import { DashbordService } from '../../services/dashboardService/dashbord.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dialogcontainer',
   standalone: false,
@@ -19,9 +21,13 @@ export class DialogcontainerComponent {
   isDeleting: boolean = false;
   totalExpenseAdded: number = 0;
   userUpdateData = new FormGroup({
-    fullName: new FormControl(''),
-    userName: new FormControl('', [Validators.pattern('^[a-zA-Z0-9_]{3,16}$')]),
+    fullName: new FormControl('', [Validators.required]),
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-zA-Z0-9_]{3,16}$'),
+    ]),
   });
+
   binIconPath: string = '/assets/animations/bin.json';
   readonly dialog = inject(MatDialog);
   constructor(
@@ -31,6 +37,7 @@ export class DialogcontainerComponent {
     @Inject(MAT_DIALOG_DATA) public deleteuserDialogData: any,
     private authService: AuthService,
     private dashboardService: DashbordService,
+    private toasterService: ToastrService,
     private dialogRef: MatDialogRef<DialogcontainerComponent>
   ) {
     this.dashboardService.fetchAllExpensesServices().subscribe({
@@ -54,28 +61,47 @@ export class DialogcontainerComponent {
   }
   submitEdit() {
     this.isUpdating = true;
+    console.log(this.userUpdateData.value, 'update');
+
     this.authService.updateUser(this.userUpdateData.value).subscribe({
       next: (res) => {
         console.log(res, 'updated');
+        this.toasterService.success(res?.message);
+        this.userDialogData.userData.fullName = res.data.fullName;
+        this.userDialogData.userData.userName = res.data.userName;
         this.isUpdating = false;
         this.isEdit = false;
       },
       error: (err) => {
         console.log(err);
         this.isUpdating = false;
+
+        const errorMessage = err?.error?.message || 'Something went wrong';
+
+        if (errorMessage === 'Username is already taken') {
+          this.userUpdateData.get('userName')?.setErrors({ duplicate: true });
+        }
+
+        this.toasterService.error(errorMessage);
       },
     });
   }
+
   deleteUser() {
     this.isDeleting = true;
     this.authService.deleteUserService().subscribe({
-      next: (res) => {
+      next: (res: any) => {
+        this.toasterService.success(res?.message);
         this.isDeleting = false;
-        this.authService.logOutService();
+        this.dialog.closeAll();
+        this.dialog.afterAllClosed.subscribe(() => {
+          this.authService.logOutService();
+        });
       },
       error: (err) => {
-        console.log(err);
         this.isDeleting = false;
+        const errorMessage = err?.error?.message || 'Something went wrong';
+        this.toasterService.error(errorMessage);
       },
     });
   }
