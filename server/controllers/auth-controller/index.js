@@ -240,20 +240,18 @@ const resetPassword = async (req, res) => {
 const updateUserInfo = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(userId, "update user");
 
     if (!userId) {
       return res.status(400).json({ message: "User ID not found in request" });
     }
 
     const updatedData = req.body;
-    console.log(updatedData, "updatedData");
+
     if (!updatedData || Object.keys(updatedData).length === 0) {
       return res.status(400).json({ message: "No data provided for update" });
     }
 
     const existingUser = await User.findOne({ _id: userId });
-    console.log(existingUser, "exist");
 
     if (!existingUser) {
       return res.status(404).json({
@@ -267,7 +265,6 @@ const updateUserInfo = async (req, res) => {
       updatedData,
       { new: true }
     );
-    console.log(updatedUser, "ipfff");
 
     if (!updatedUser) {
       return res.status(500).json({
@@ -298,7 +295,6 @@ const updateUserInfo = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
 
     const existingUser = await User.findOne({ _id: userId });
     if (!existingUser) {
@@ -307,7 +303,6 @@ const getUserById = async (req, res) => {
         message: "User not found",
       });
     }
-    console.log(existingUser);
 
     const userData = {
       fullName: existingUser.fullName,
@@ -332,7 +327,6 @@ const getUserById = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
 
     const existingUser = await User.findById(userId);
     if (!existingUser) {
@@ -358,7 +352,6 @@ const deleteAccount = async (req, res) => {
       message: "User successfully deleted",
     });
   } catch (err) {
-    console.error("Error deleting user:", err);
     return res.status(500).json({
       success: false,
       message: "Something went wrong on our end. Please try again later",

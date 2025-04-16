@@ -272,7 +272,6 @@ const getExpenseById = async (req, res) => {
       data: expense,
     });
   } catch (error) {
-    console.error("Error fetching expense by ID:", error);
     res.status(500).json({
       success: false,
       message: "Something went wrong on our end. Please try again later.",

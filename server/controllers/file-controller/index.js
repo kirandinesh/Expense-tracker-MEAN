@@ -7,8 +7,6 @@ const Category = require("../../models/Categories");
 const importExpenseData = async (req, res) => {
   try {
     const file = req.file;
-    console.log(file, "csv");
-
     const userId = req.user._id;
 
     if (!file) {
@@ -94,7 +92,6 @@ const importExpenseData = async (req, res) => {
       data: insertedExpenses,
     });
   } catch (err) {
-    console.error("Error in importExpenseData:", err);
     res.status(500).json({
       success: false,
       message: "Something went wrong while importing. Please try again later.",

@@ -41,7 +41,6 @@ const addCategory = async (req, res) => {
       data: category,
     });
   } catch (err) {
-    console.error("Add Category Error:", err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -86,7 +85,6 @@ const updateCategory = async (req, res) => {
       data: updatedCategory,
     });
   } catch (err) {
-    console.error("Update Category Error:", err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -112,7 +110,6 @@ const getCategories = async (req, res) => {
       data: category.categoryText,
     });
   } catch (err) {
-    console.error("Get Categories Error:", err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
