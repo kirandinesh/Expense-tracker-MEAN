@@ -26,7 +26,6 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import html2canvas from 'html2canvas';
 import { TableComponent } from '../../components/table/table.component';
 @Component({
   selector: 'app-dashboard',
@@ -155,8 +154,6 @@ export class DashboardComponent implements OnInit {
       this.downloadAsPDF();
     } else if (event.value === 'csv') {
       this.downloadAsCSV();
-    } else if (event.value === 'jpg') {
-      this.downloadAsJPG();
     }
   }
 
@@ -179,7 +176,7 @@ export class DashboardComponent implements OnInit {
       ).map((expenses: any) => [
         expenses.name,
         expenses.amount,
-        expenses.expenseDate,
+        new Date(expenses.expenseDate).toLocaleDateString('en-CA'),
         expenses.category,
         expenses.paymentType,
         expenses.notes,
@@ -195,7 +192,11 @@ export class DashboardComponent implements OnInit {
       ? this.filteredExpenseLists.data
       : this.filteredExpenseLists
     ).forEach((expenses) => {
-      csvContent += `${expenses.name},${expenses.amount},${expenses.expenseDate},${expenses.category},${expenses.paymentType},${expenses.notes}\n`;
+      csvContent += `${expenses.name},${expenses.amount},${new Date(
+        expenses.expenseDate
+      ).toLocaleDateString('en-CA')},${expenses.category},${
+        expenses.paymentType
+      },${expenses.notes}\n`;
     });
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
     const link = document.createElement('a');
@@ -204,27 +205,6 @@ export class DashboardComponent implements OnInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-
-  downloadAsJPG() {
-    const element = this.childComponent.getTableElement().nativeElement;
-
-    const originalOverflow = element.style.overflow;
-    const originalHeight = element.style.height;
-    element.style.overflow = 'visible';
-    element.style.height = 'auto';
-
-    setTimeout(() => {
-      html2canvas(element).then((canvas) => {
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        const link = document.createElement('a');
-        link.href = imgData;
-        link.download = 'table-snapshot.jpg';
-        link.click();
-        element.style.overflow = originalOverflow;
-        element.style.height = originalHeight;
-      });
-    }, 0);
   }
 
   clearDate() {
