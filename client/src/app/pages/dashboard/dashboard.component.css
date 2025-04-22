@@ -7,7 +7,9 @@
   box-shadow: var(--color-shadow-soft);
   backdrop-filter: blur(6px);
 }
-
+::ng-deep .custom-select-panel {
+  background-color: var(--color-bg-color) !important;
+}
 ::ng-deep .apexcharts-menu-item {
   color: var(--color-text-primary) !important;
 }
@@ -16,11 +18,31 @@
   background-color: rgba(29, 233, 182, 0.1) !important;
   color: var(--color-text-price) !important;
 }
-table {
-  width: 100%;
+
+::ng-deep .mdc-text-field {
+  padding: 0 2px !important;
 }
 
-.table-container {
-  max-height: calc(100vh - 155px);
-  height: calc(100vh - 155px);
+::ng-deep .mat-mdc-input-element {
+  padding-left: 8px !important;
+}
+
+::ng-deep .mat-calendar,
+::ng-deep .custom-select-panel {
+  background-color: var(--color-bg-color) !important;
+}
+::ng-deep .mdc-line-ripple::before {
+  border-bottom-width: 0 !important;
+}
+::ng-deep .mat-mdc-text-field-wrapper {
+  border: 1px solid var(--color-border-accent) !important;
+}
+::ng-deep .mat-calendar-body-selected {
+  background-color: var(--color-accent-color) !important;
+}
+::ng-deep
+  .mat-calendar-body-today:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  border-color: var(--color-border-accent) !important;
 }

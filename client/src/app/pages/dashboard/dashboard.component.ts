@@ -21,15 +21,24 @@ import { displayedColumns } from '../../config/expense';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { FormControl } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+import { TableComponent } from '../../components/table/table.component';
 @Component({
   selector: 'app-dashboard',
   standalone: false,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  @ViewChild(TableComponent) childComponent!: TableComponent;
+
   readonly dialog = inject(MatDialog);
 
   pieChartIconPath: string = '/assets/animations/pi-chart.json';
@@ -46,9 +55,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   isChartLoading: boolean = false;
   isPieChartLoading: boolean = false;
+
   expenseList!: MatTableDataSource<any>;
+  filteredExpenseList = [];
+  selectedExpenseDate: Date | null = null;
+  dateControl = new FormControl<Date | null>(null);
+  exportType = new FormControl('');
 
   chartData = [];
+
   chartLegent: ApexLegend = {
     position: 'top',
     horizontalAlign: 'center',
@@ -133,14 +148,101 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.fetchExpenseList();
     this.loadChart();
-    console.log(this.firstExpenseDate, 'firstExpenseDate');
-    console.log(this.lastExpenseDate, 'last');
   }
 
-  ngAfterViewInit() {
-    if (this.expenseList && this.paginator) {
-      this.expenseList.paginator = this.paginator;
+  onExportTypeChange(event: MatSelectChange) {
+    if (event.value === 'pdf') {
+      this.downloadAsPDF();
+    } else if (event.value === 'csv') {
+      this.downloadAsCSV();
+    } else if (event.value === 'jpg') {
+      this.downloadAsJPG();
     }
+  }
+
+  get filteredExpenseLists() {
+    if (!this.selectedExpenseDate) {
+      return this.expenseList;
+    }
+    return this.filteredExpenseList;
+  }
+
+  downloadAsPDF() {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [
+        ['name', 'amount', 'expenseDate', 'category', 'paymentType', 'notes'],
+      ],
+      body: (this.filteredExpenseLists instanceof MatTableDataSource
+        ? this.filteredExpenseLists.data
+        : this.filteredExpenseLists
+      ).map((expenses: any) => [
+        expenses.name,
+        expenses.amount,
+        expenses.expenseDate,
+        expenses.category,
+        expenses.paymentType,
+        expenses.notes,
+      ]),
+    });
+
+    doc.save('expense_report.pdf');
+  }
+
+  downloadAsCSV() {
+    let csvContent = 'name,	amount,	expenseDate,	category,	paymentType,	notes\n';
+    (this.filteredExpenseLists instanceof MatTableDataSource
+      ? this.filteredExpenseLists.data
+      : this.filteredExpenseLists
+    ).forEach((expenses) => {
+      csvContent += `${expenses.name},${expenses.amount},${expenses.expenseDate},${expenses.category},${expenses.paymentType},${expenses.notes}\n`;
+    });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'expense-report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  downloadAsJPG() {
+    const element = this.childComponent.getTableElement().nativeElement;
+
+    const originalOverflow = element.style.overflow;
+    const originalHeight = element.style.height;
+    element.style.overflow = 'visible';
+    element.style.height = 'auto';
+
+    setTimeout(() => {
+      html2canvas(element).then((canvas) => {
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'table-snapshot.jpg';
+        link.click();
+        element.style.overflow = originalOverflow;
+        element.style.height = originalHeight;
+      });
+    }, 0);
+  }
+
+  clearDate() {
+    this.dateControl.setValue(null);
+    this.exportType.setValue(null);
+    this.selectedExpenseDate = null;
+    this.fetchExpenseList();
+  }
+
+  onDateChange(event: MatDatepickerInputEvent<Date>) {
+    this.selectedExpenseDate = event.value;
+
+    if (this.selectedExpenseDate) {
+      const isoDate = this.selectedExpenseDate.toLocaleDateString();
+      console.log('ISO Date:', isoDate);
+      console.log();
+    }
+    this.fetchExpenseList();
   }
 
   handleAddExpense() {
@@ -194,11 +296,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.lastExpenseDate = res?.data?.lastExpenseCreatedAt || '-';
         this.totalExpenseAmount = res?.data?.totalExpense || 0;
         this.totalExpenseAdded = res?.data?.expenses.length || 0;
-        this.expenseList = new MatTableDataSource(res.data.expenses);
+        const data = res?.data?.expenses || [];
+        console.log(data, 'dataaa');
+
+        this.filteredExpenseList = data.filter((expense: any) => {
+          const expenseDate = new Date(expense.expenseDate).toLocaleDateString(
+            'en-CA'
+          );
+          const selectedDate =
+            this.selectedExpenseDate?.toLocaleDateString('en-CA');
+          return selectedDate ? expenseDate === selectedDate : true;
+        });
+
+        console.log(this.filteredExpenseList, 'filter');
+
+        this.expenseList = new MatTableDataSource(
+          this.selectedExpenseDate ? this.filteredExpenseList : data
+        );
         this.expenseList.paginator = this.paginator;
         this.chartData = res.data.expenses;
-        console.log(this.firstExpenseDate, 'fierts');
-        console.log(this.lastExpenseDate, 'last');
       },
       error: (err) => {
         console.log(err);

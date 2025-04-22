@@ -81,58 +81,65 @@
   <tr mat-header-row *matHeaderRowDef="headers"></tr>
   <tr mat-row *matRowDef="let row; columns: headers"></tr>
 </table>
-<table
-  *ngIf="isExpense"
-  mat-table
-  [dataSource]="expenseList"
-  class="mat-elevation-z8"
->
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>name</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-  </ng-container>
 
-  <ng-container matColumnDef="amount">
-    <th mat-header-cell *matHeaderCellDef>amount</th>
-    <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
-  </ng-container>
+<div *ngIf="isExpense">
+  <div #tableElement class="table-container overflow-auto">
+    <table mat-table [dataSource]="expenseList" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
 
-  <ng-container matColumnDef="expenseDate">
-    <th mat-header-cell *matHeaderCellDef>expenseDate</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.expenseDate | date : "dd-MM-yyyy" }}
-    </td>
-  </ng-container>
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>amount</th>
+        <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+      </ng-container>
 
-  <ng-container matColumnDef="category">
-    <th mat-header-cell *matHeaderCellDef>category</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.category }}
-    </td> </ng-container
-  ><ng-container matColumnDef="paymentType">
-    <th mat-header-cell *matHeaderCellDef>paymentType</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.paymentType }}
-    </td> </ng-container
-  ><ng-container matColumnDef="notes">
-    <th mat-header-cell *matHeaderCellDef>notes</th>
-    <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
-  </ng-container>
-  <ng-container matColumnDef="Action">
-    <th mat-header-cell *matHeaderCellDef>Action</th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-icon-button color="primary" (click)="onEdit(element._id)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" (click)="onDelete(element._id)">
-        <ng-container *ngIf="isDeleting">
-          <app-loader></app-loader>
-        </ng-container>
-        <mat-icon [ngStyle]="{ color: 'red' }">delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+      <ng-container matColumnDef="expenseDate">
+        <th mat-header-cell *matHeaderCellDef>expenseDate</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.expenseDate | date : "dd-MM-yyyy" }}
+        </td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="newHeaders; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: newHeaders"></tr>
-</table>
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>category</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.category }}
+        </td> </ng-container
+      ><ng-container matColumnDef="paymentType">
+        <th mat-header-cell *matHeaderCellDef>paymentType</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.paymentType }}
+        </td> </ng-container
+      ><ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef>notes</th>
+        <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
+      </ng-container>
+      <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="onEdit(element._id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(element._id)">
+            <ng-container *ngIf="isDeleting">
+              <app-loader></app-loader>
+            </ng-container>
+            <mat-icon [ngStyle]="{ color: 'red' }">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="newHeaders; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: newHeaders"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    *ngIf="expenseList && expenseList.data.length > 0"
+    [pageSize]="10"
+    [pageSizeOptions]="[10, 25, 100]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</div>

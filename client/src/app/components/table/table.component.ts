@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnInit,
@@ -18,8 +20,13 @@ import { Router } from '@angular/router';
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('tableElement') tableElement!: ElementRef;
+  getTableElement() {
+    return this.tableElement;
+  }
+
   newHeaders: string[] = [];
   isDeleting: boolean = false;
   @Input() dataSource: Expense[] = [];
@@ -37,6 +44,13 @@ export class TableComponent implements OnInit {
     private dashboardService: DashbordService,
     private router: Router
   ) {}
+
+  ngAfterViewInit(): void {
+    if (this.expenseList && this.paginator) {
+      this.expenseList.paginator = this.paginator;
+    }
+  }
+
   ngOnInit(): void {
     this.newHeaders = [...this.headers, 'Action'];
   }

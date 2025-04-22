@@ -206,11 +206,57 @@
   <div
     class="bg-card-bg rounded-2xl shadow-[var(--color-shadow-soft)] p-5 flex flex-col gap-4 transition-transform hover:scale-[1.01] cursor-pointer"
   >
-    <div class="py-5">
-      <span
-        class="text-2xl text-text-muted text-shadow-(--color-shadow-soft) font-black"
-        >Expense Summary</span
-      >
+    <div class="flex flex-col md:flex-row md:justify-between gap-3 py-5">
+      <div>
+        <span
+          class="text-text-muted text-[0.8rem] xs:text-[1rem] 2xs:text-[1.2rem] 3xs:text-[1.4rem] 4xs:text-[1.5rem] sm:text-[1.1rem] md:text-[1.4rem] font-semibold tracking-wide 2xl:text-2xl"
+          >Expense Summary
+        </span>
+      </div>
+      <div>
+        <form class="flex flex-col w-full">
+          <div>
+            <mat-form-field class="w-full">
+              <mat-label class="pl-2">Choose a Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                (dateChange)="onDateChange($event)"
+                [formControl]="dateControl"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Export as</mat-label>
+          <mat-select
+            [formControl]="exportType"
+            panelClass="custom-select-panel"
+            (selectionChange)="onExportTypeChange($event)"
+            disableRipple
+          >
+            <mat-option value="pdf">PDF</mat-option>
+            <mat-option value="jpg">JPG</mat-option>
+            <mat-option value="csv">CSV</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="py-1 px-2 rounded-lg text-btn-warn-text bg-btn-warn-bg"
+          (click)="clearDate()"
+        >
+          Reset
+        </button>
+      </div>
     </div>
     <div
       *ngIf="!expenseList || expenseList.data.length === 0"
@@ -239,7 +285,7 @@
     </div>
     <div
       *ngIf="expenseList && expenseList.data.length > 0"
-      class="table-container shadow-[var(--color-shadow-soft)] z-10 overflow-auto"
+      class="shadow-[var(--color-shadow-soft)] z-10 overflow-auto"
     >
       <app-table
         [isExpense]="true"
@@ -247,14 +293,5 @@
         [headers]="tableHeader"
       ></app-table>
     </div>
-
-    <mat-paginator
-      *ngIf="expenseList && expenseList.data.length > 0"
-      [length]="totalExpenseAdded"
-      [pageSize]="10"
-      [pageSizeOptions]="[10, 25, 100]"
-      aria-label="Select page"
-    >
-    </mat-paginator>
   </div>
 </div>
