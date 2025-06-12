@@ -309,6 +309,7 @@ const getUserById = async (req, res) => {
       userName: existingUser.userName,
       userSince: existingUser.createdAt,
       lastLogin: existingUser.updatedAt,
+      income: existingUser.income,
     };
 
     return res.status(200).json({
@@ -359,6 +360,40 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const insertIncome = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const income = req.body;
+    const userExist = await User.findById(userId);
+    if (!userExist) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const updateIncome = await User.findByIdAndUpdate({ _id: userId }, income, {
+      new: true,
+    });
+    if (!updateIncome) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to insert income",
+      });
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: "Income inserted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong on our end. Please try again later.",
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -367,4 +402,5 @@ module.exports = {
   updateUserInfo,
   getUserById,
   deleteAccount,
+  insertIncome,
 };

@@ -17,6 +17,7 @@ router.route("/send-email").post(authController.sendEmail);
 router.route("/password-reset").post(authController.resetPassword);
 router.route("/update-user").put(authMiddleware, authController.updateUserInfo);
 router.route("/get-user").get(authMiddleware, authController.getUserById);
+router.route("/add-income").put(authMiddleware, authController.insertIncome);
 router
   .route("/delete-user")
   .delete(authMiddleware, authController.deleteAccount);
